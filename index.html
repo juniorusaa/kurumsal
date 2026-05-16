@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaCorp — Geleceği Birlikte İnşa Ediyoruz</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gold:#d4a853;--gold2:#f0c674;
+  --dark:#07080d;--dark2:#0d0f1a;
+  --text:rgba(255,255,255,0.85);--muted:rgba(255,255,255,0.4);
+  --border:rgba(255,255,255,0.07);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--dark);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden;}
+
+/* CANVAS BG */
+#bg{position:fixed;top:0;left:0;z-index:0;pointer-events:none;}
+
+/* NOISE */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");opacity:0.4;z-index:1;pointer-events:none;}
+
+section{position:relative;z-index:10;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.4rem 5%;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(24px);background:rgba(7,8,13,0.75);border-bottom:1px solid var(--border);}
+.nav-logo{display:flex;align-items:center;gap:0.6rem;}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;color:#07080d;}
+.logo-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;letter-spacing:-0.02em;}
+.logo-name span{color:var(--gold);}
+.nav-links{display:flex;gap:2.5rem;align-items:center;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.85rem;font-weight:500;transition:color 0.2s;}
+.nav-links a:hover{color:#fff;}
+.nav-cta{padding:0.6rem 1.4rem;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:8px;color:#07080d!important;font-weight:700!important;font-size:0.82rem!important;}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:8rem 5% 5rem;text-align:center;flex-direction:column;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:0.6rem;padding:0.45rem 1.2rem;border:1px solid rgba(212,168,83,0.25);border-radius:999px;font-size:0.75rem;color:var(--gold);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:2.5rem;background:rgba(212,168,83,0.05);}
+.eyebrow-line{width:24px;height:1px;background:var(--gold);}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(3.2rem,8vw,7.5rem);font-weight:700;line-height:0.95;letter-spacing:-0.04em;margin-bottom:2rem;}
+h1 .w1{display:block;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,0.7) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+h1 .w2{display:block;background:linear-gradient(135deg,var(--gold),var(--gold2),#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shine 4s linear infinite;}
+@keyframes shine{0%,100%{filter:brightness(1);}50%{filter:brightness(1.3);}}
+.hero-desc{font-size:clamp(1rem,2vw,1.25rem);color:var(--muted);max-width:600px;line-height:1.75;margin-bottom:3.5rem;}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;}
+.btn-gold{padding:0.95rem 2.4rem;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:10px;color:#07080d;font-weight:700;font-size:0.95rem;text-decoration:none;transition:transform 0.2s,box-shadow 0.2s;display:inline-block;}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 16px 48px rgba(212,168,83,0.3);}
+.btn-ghost{padding:0.95rem 2.4rem;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--text);font-weight:600;font-size:0.95rem;text-decoration:none;transition:all 0.2s;display:inline-block;}
+.btn-ghost:hover{border-color:rgba(212,168,83,0.4);color:var(--gold);}
+
+/* TRUSTED BY */
+#trusted{padding:4rem 5%;border-top:1px solid var(--border);border-bottom:1px solid var(--border);text-align:center;}
+.trusted-label{font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.2em;margin-bottom:2rem;}
+.logos-row{display:flex;align-items:center;justify-content:center;gap:4rem;flex-wrap:wrap;}
+.logo-item{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:rgba(255,255,255,0.15);letter-spacing:-0.02em;transition:color 0.3s;}
+.logo-item:hover{color:rgba(255,255,255,0.4);}
+
+/* STATS */
+#stats{padding:7rem 5%;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem;}
+.stat-card{padding:2.5rem 2rem;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:20px;text-align:center;transition:all 0.3s;position:relative;overflow:hidden;}
+.stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity 0.3s;}
+.stat-card:hover{border-color:rgba(212,168,83,0.2);transform:translateY(-4px);}
+.stat-card:hover::after{opacity:1;}
+.stat-num{font-family:'Space Grotesk',sans-serif;font-size:3.5rem;font-weight:700;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.stat-unit{font-size:1.5rem;}
+.stat-desc{color:var(--muted);font-size:0.85rem;margin-top:0.75rem;line-height:1.5;}
+
+/* ABOUT */
+#about{padding:8rem 5%;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;}
+.about-visual{position:relative;height:500px;}
+.about-canvas-wrap{width:100%;height:100%;border-radius:24px;overflow:hidden;border:1px solid var(--border);background:rgba(255,255,255,0.02);}
+.about-canvas-wrap canvas{width:100%!important;height:100%!important;}
+.float-badge{position:absolute;background:rgba(7,8,13,0.9);border:1px solid rgba(212,168,83,0.25);border-radius:14px;padding:1rem 1.4rem;backdrop-filter:blur(12px);}
+.float-badge.b1{bottom:-20px;right:-20px;}
+.float-badge.b2{top:-20px;left:-20px;}
+.badge-num{font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;color:var(--gold);}
+.badge-txt{font-size:0.75rem;color:var(--muted);margin-top:0.2rem;}
+.about-content .eyebrow{font-size:0.75rem;color:var(--gold);text-transform:uppercase;letter-spacing:0.2em;font-weight:600;margin-bottom:1rem;}
+.about-content h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.03em;line-height:1.1;margin-bottom:1.5rem;}
+.about-content h2 span{background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.about-content p{color:var(--muted);line-height:1.8;font-size:1rem;margin-bottom:1rem;}
+.values{display:flex;flex-direction:column;gap:0.75rem;margin-top:2rem;}
+.value-item{display:flex;align-items:center;gap:0.75rem;font-size:0.9rem;color:rgba(255,255,255,0.6);}
+.value-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+
+/* SERVICES */
+#hizmetler{padding:8rem 5%;background:rgba(255,255,255,0.01);border-top:1px solid var(--border);}
+#hizmetler .inner{max-width:1200px;margin:0 auto;}
+.section-header{text-align:center;margin-bottom:5rem;}
+.section-header .eyebrow{font-size:0.75rem;color:var(--gold);text-transform:uppercase;letter-spacing:0.2em;font-weight:600;margin-bottom:1rem;}
+.section-header h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.2rem,5vw,3.5rem);font-weight:700;letter-spacing:-0.03em;}
+.section-header h2 span{background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.section-header p{color:var(--muted);margin-top:1rem;font-size:1rem;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.7;}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.svc{padding:2.5rem;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:20px;transition:all 0.3s;position:relative;overflow:hidden;}
+.svc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(212,168,83,0.04),transparent);opacity:0;transition:opacity 0.3s;}
+.svc:hover{transform:translateY(-5px);border-color:rgba(212,168,83,0.2);}
+.svc:hover::before{opacity:1;}
+.svc-icon{font-size:2rem;margin-bottom:1.5rem;display:block;}
+.svc h3{font-size:1.1rem;font-weight:700;margin-bottom:0.75rem;font-family:'Space Grotesk',sans-serif;}
+.svc p{color:var(--muted);font-size:0.88rem;line-height:1.7;}
+.svc-num{position:absolute;top:1.5rem;right:1.5rem;font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:rgba(255,255,255,0.04);}
+
+/* TEAM */
+#ekip{padding:8rem 5%;max-width:1200px;margin:0 auto;}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem;margin-top:5rem;}
+.team-card{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:20px;overflow:hidden;transition:all 0.3s;}
+.team-card:hover{transform:translateY(-5px);border-color:rgba(212,168,83,0.2);}
+.team-avatar{height:220px;display:flex;align-items:center;justify-content:center;font-size:5rem;position:relative;}
+.team-info{padding:1.5rem;}
+.team-info h3{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;}
+.team-info .role{color:var(--gold);font-size:0.8rem;font-weight:600;letter-spacing:0.05em;margin:0.3rem 0;}
+.team-info p{color:var(--muted);font-size:0.82rem;line-height:1.6;margin-top:0.5rem;}
+
+/* REFERANSLAR */
+#referanslar{padding:8rem 5%;background:rgba(255,255,255,0.01);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+#referanslar .inner{max-width:1200px;margin:0 auto;}
+.refs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.5rem;margin-top:5rem;}
+.ref-card{padding:2.5rem;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:20px;transition:all 0.3s;}
+.ref-card:hover{border-color:rgba(212,168,83,0.2);}
+.ref-stars{color:var(--gold);font-size:1rem;margin-bottom:1.2rem;letter-spacing:2px;}
+.ref-text{color:rgba(255,255,255,0.7);font-size:0.95rem;line-height:1.8;font-style:italic;margin-bottom:1.5rem;}
+.ref-author{display:flex;align-items:center;gap:0.75rem;}
+.ref-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;color:#07080d;}
+.ref-name{font-weight:700;font-size:0.9rem;}
+.ref-company{color:var(--muted);font-size:0.78rem;}
+
+/* CTA */
+#iletisim{padding:10rem 5%;text-align:center;}
+.cta-box{max-width:700px;margin:0 auto;padding:5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(212,168,83,0.15);border-radius:32px;position:relative;overflow:hidden;}
+.cta-box::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:400px;height:400px;background:radial-gradient(circle,rgba(212,168,83,0.06),transparent 70%);pointer-events:none;}
+.cta-box h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:700;letter-spacing:-0.03em;margin-bottom:1.2rem;}
+.cta-box p{color:var(--muted);font-size:1rem;line-height:1.7;margin-bottom:2.5rem;}
+.cta-contact{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:2rem;}
+.contact-item{display:flex;align-items:center;gap:0.5rem;color:var(--muted);font-size:0.85rem;}
+.contact-item span{color:var(--gold);}
+
+/* FOOTER */
+footer{padding:3rem 5%;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.footer-left{display:flex;align-items:center;gap:0.6rem;}
+.footer-right{color:var(--muted);font-size:0.8rem;}
+
+/* GLOW */
+.glow{position:fixed;border-radius:50%;filter:blur(140px);pointer-events:none;z-index:2;}
+.g1{width:700px;height:700px;background:rgba(212,168,83,0.04);top:-300px;right:-300px;}
+.g2{width:600px;height:600px;background:rgba(212,168,83,0.03);bottom:-300px;left:-300px;}
+
+@media(max-width:900px){
+  #about{grid-template-columns:1fr;}
+  .about-visual{height:300px;}
+  .services-grid{grid-template-columns:1fr;}
+  .nav-links{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="glow g1"></div>
+<div class="glow g2"></div>
+<canvas id="bg"></canvas>
+
+<nav>
+  <div class="nav-logo">
+    <div class="logo-icon">N</div>
+    <div class="logo-name">Nova<span>Corp</span></div>
+  </div>
+  <div class="nav-links">
+    <a href="#about">Hakkımızda</a>
+    <a href="#hizmetler">Hizmetler</a>
+    <a href="#ekip">Ekip</a>
+    <a href="#referanslar">Referanslar</a>
+    <a href="#iletisim" class="nav-cta">İletişim</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-eyebrow"><span class="eyebrow-line"></span>Türkiye'nin Lider Yazılım Şirketi<span class="eyebrow-line"></span></div>
+  <h1>
+    <span class="w1">Geleceği Birlikte</span>
+    <span class="w2">İnşa Ediyoruz</span>
+  </h1>
+  <p class="hero-desc">20 yıllık deneyim, 500'den fazla başarılı proje ve Türkiye'nin dört bir yanındaki kurumsal müşterilerimizle dijital dönüşümün öncüsü oluyoruz.</p>
+  <div class="hero-actions">
+    <a href="#iletisim" class="btn-gold">Ücretsiz Danışmanlık Al</a>
+    <a href="#hizmetler" class="btn-ghost">Hizmetlerimizi İncele</a>
+  </div>
+</section>
+
+<section id="trusted">
+  <p class="trusted-label">Güvendikleri firmalar</p>
+  <div class="logos-row">
+    <div class="logo-item">AKBANK</div>
+    <div class="logo-item">TURKCELL</div>
+    <div class="logo-item">SABANCI</div>
+    <div class="logo-item">GARANTI</div>
+    <div class="logo-item">KOÇSISTEM</div>
+    <div class="logo-item">ANADOLU</div>
+  </div>
+</section>
+
+<section>
+  <div id="stats">
+    <div class="stat-card"><div class="stat-num"><span data-count="20">0</span><span class="stat-unit">+</span></div><div class="stat-desc">Yıl Sektör Deneyimi</div></div>
+    <div class="stat-card"><div class="stat-num"><span data-count="500">0</span><span class="stat-unit">+</span></div><div class="stat-desc">Tamamlanan Proje</div></div>
+    <div class="stat-card"><div class="stat-num"><span data-count="150">0</span><span class="stat-unit">+</span></div><div class="stat-desc">Kurumsal Müşteri</div></div>
+    <div class="stat-card"><div class="stat-num"><span data-count="98">0</span><span class="stat-unit">%</span></div><div class="stat-desc">Müşteri Memnuniyeti</div></div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="about-visual">
+    <div class="about-canvas-wrap"><canvas id="c-about"></canvas></div>
+    <div class="float-badge b1"><div class="badge-num">ISO 27001</div><div class="badge-txt">Güvenlik Sertifikası</div></div>
+    <div class="float-badge b2"><div class="badge-num">7/24</div><div class="badge-txt">Teknik Destek</div></div>
+  </div>
+  <div class="about-content">
+    <p class="eyebrow">Biz Kimiz</p>
+    <h2>Dijital Dönüşümde <span>Güvenilir</span> Ortağınız</h2>
+    <p>2004 yılında İstanbul'da kurulan NovaCorp, bankacılık, fintech, e-ticaret ve kamu sektörlerinde yüzlerce kurumsal projeye imza atmış Türkiye'nin önde gelen yazılım şirketlerinden biridir.</p>
+    <p>Uzman mühendis kadromuz ve çevik metodolojimizle projelerinizi zamanında, bütçe dahilinde ve en yüksek kalite standartlarında teslim ediyoruz.</p>
+    <div class="values">
+      <div class="value-item"><span class="value-dot"></span>Şeffaf proje yönetimi ve sürekli iletişim</div>
+      <div class="value-item"><span class="value-dot"></span>ISO 27001 onaylı güvenlik standartları</div>
+      <div class="value-item"><span class="value-dot"></span>Lansman sonrası 1 yıl ücretsiz destek</div>
+      <div class="value-item"><span class="value-dot"></span>Yerli ve yabancı bulut altyapı uzmanlığı</div>
+    </div>
+  </div>
+</section>
+
+<section id="hizmetler">
+  <div class="inner">
+    <div class="section-header">
+      <p class="eyebrow">Ne Yapıyoruz</p>
+      <h2>Kurumsal <span>Hizmetlerimiz</span></h2>
+      <p>İşletmenizin tüm dijital ihtiyaçlarını tek çatı altında karşılıyoruz.</p>
+    </div>
+    <div class="services-grid">
+      <div class="svc"><span class="svc-num">01</span><span class="svc-icon">🏛️</span><h3>Kurumsal ERP Çözümleri</h3><p>İşletmenizin tüm süreçlerini entegre eden, ölçeklenebilir ERP sistemleri. SAP, Oracle ve özel geliştirme uzmanlığı.</p></div>
+      <div class="svc"><span class="svc-num">02</span><span class="svc-icon">🔐</span><h3>Siber Güvenlik</h3><p>ISO 27001 standartlarında penetrasyon testleri, güvenlik denetimleri ve 7/24 SOC hizmetleri.</p></div>
+      <div class="svc"><span class="svc-num">03</span><span class="svc-icon">☁️</span><h3>Bulut Dönüşümü</h3><p>AWS, Azure ve GCP üzerinde kurumsal altyapı migrasyonu, optimizasyon ve yönetilen bulut hizmetleri.</p></div>
+      <div class="svc"><span class="svc-num">04</span><span class="svc-icon">🤖</span><h3>Yapay Zeka & Veri</h3><p>İş zekası çözümleri, makine öğrenmesi modelleri ve büyük veri altyapısı ile karar destek sistemleri.</p></div>
+      <div class="svc"><span class="svc-num">05</span><span class="svc-icon">📱</span><h3>Mobil & Web Platformlar</h3><p>Kurumsal mobil uygulamalar, müşteri portalları ve self-servis platformları. iOS, Android ve web.</p></div>
+      <div class="svc"><span class="svc-num">06</span><span class="svc-icon">🔗</span><h3>Sistem Entegrasyonu</h3><p>Farklı sistemlerinizi birbirine bağlayan API yönetimi, ESB çözümleri ve middleware geliştirme.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="ekip">
+  <div class="section-header">
+    <p class="eyebrow">Ekibimiz</p>
+    <h2>Uzman <span>Kadromuz</span></h2>
+    <p>Alanında uzman, deneyimli ve tutkulu profesyonellerden oluşan ekibimizle tanışın.</p>
+  </div>
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-avatar" style="background:linear-gradient(135deg,#1a1025,#2d1f45);">👨‍💼</div>
+      <div class="team-info"><h3>Ahmet Yılmaz</h3><div class="role">CEO & Kurucu</div><p>20 yıllık yazılım ve yöneticilik deneyimi. MIT Bilgisayar Bilimleri mezunu.</p></div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="background:linear-gradient(135deg,#0d1a25,#1a2d45);">👩‍💻</div>
+      <div class="team-info"><h3>Zeynep Kaya</h3><div class="role">CTO</div><p>Bulut mimarisi ve yapay zeka konularında 15 yıllık uzmanlık. ODTÜ mezunu.</p></div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="background:linear-gradient(135deg,#1a1510,#2d2010);">👨‍🔬</div>
+      <div class="team-info"><h3>Murat Demir</h3><div class="role">Baş Güvenlik Uzmanı</div><p>ISO 27001 denetçisi, etik hacker ve siber güvenlik danışmanı. 12 yıl deneyim.</p></div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="background:linear-gradient(135deg,#0d1a15,#1a2d20);">👩‍🎨</div>
+      <div class="team-info"><h3>Selin Arslan</h3><div class="role">Baş UX Tasarımcısı</div><p>Kullanıcı deneyimi ve arayüz tasarımında ödüllü kariyer. İTÜ Endüstriyel Tasarım mezunu.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="referanslar">
+  <div class="inner">
+    <div class="section-header">
+      <p class="eyebrow">Müşterilerimiz Ne Diyor</p>
+      <h2>Başarı <span>Hikayeleri</span></h2>
+    </div>
+    <div class="refs-grid">
+      <div class="ref-card">
+        <div class="ref-stars">★★★★★</div>
+        <p class="ref-text">"NovaCorp ile çalışmak bir dönüm noktası oldu. ERP projemizi 6 ayda tamamladılar ve sistemimiz ilk günden beri sorunsuz çalışıyor. Gerçekten profesyonel bir ekip."</p>
+        <div class="ref-author"><div class="ref-avatar">AK</div><div><div class="ref-name">Ali Koçak</div><div class="ref-company">BT Direktörü, Akdeniz Holding</div></div></div>
+      </div>
+      <div class="ref-card">
+        <div class="ref-stars">★★★★★</div>
+        <p class="ref-text">"Güvenlik denetimlerini NovaCorp'a emanet ettik. Tüm açıklarımızı tespit edip kapattılar. Artık verilerimiz güvende olduğunu biliyoruz. Teşekkürler!"</p>
+        <div class="ref-author"><div class="ref-avatar">FY</div><div><div class="ref-name">Fatma Yıldız</div><div class="ref-company">CISO, Metropol Finans</div></div></div>
+      </div>
+      <div class="ref-card">
+        <div class="ref-stars">★★★★★</div>
+        <p class="ref-text">"Bulut migrasyonumuzu hem zamanında hem de bütçe dahilinde tamamladılar. Sistem performansımız %300 arttı. Kesinlikle tavsiye ediyoruz."</p>
+        <div class="ref-author"><div class="ref-avatar">MS</div><div><div class="ref-name">Mehmet Sarı</div><div class="ref-company">Genel Müdür, TeknoLojistik A.Ş.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="iletisim">
+  <div class="cta-box">
+    <h2>Projenizi Konuşalım</h2>
+    <p>Dijital dönüşüm yolculuğunuzda yanınızda olmak için sabırsızlanıyoruz. Ücretsiz ön danışmanlık için bugün bize ulaşın.</p>
+    <a href="mailto:info@novacorp.com.tr" class="btn-gold">Hemen İletişime Geç</a>
+    <div class="cta-contact">
+      <div class="contact-item"><span>📍</span> Maslak, İstanbul</div>
+      <div class="contact-item"><span>📞</span> +90 212 555 00 00</div>
+      <div class="contact-item"><span>✉️</span> info@novacorp.com.tr</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-left">
+    <div class="logo-icon">N</div>
+    <div class="logo-name">Nova<span>Corp</span></div>
+  </div>
+  <div class="footer-right">© 2025 NovaCorp Yazılım A.Ş. — Tüm hakları saklıdır.</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script>
+// ─── BG PARTICLES ───────────────────────────────────────────
+const bg = document.getElementById('bg');
+const bgR = new THREE.WebGLRenderer({canvas:bg,antialias:true,alpha:true});
+bgR.setPixelRatio(Math.min(devicePixelRatio,2));
+bgR.setSize(innerWidth,innerHeight);
+const bgS = new THREE.Scene(), bgC = new THREE.PerspectiveCamera(60,innerWidth/innerHeight,0.1,1000);
+bgC.position.z=6;
+const N=6000, g=new THREE.BufferGeometry(), p=new Float32Array(N*3), cl=new Float32Array(N*3);
+for(let i=0;i<N;i++){
+  const r=4+Math.random()*18, θ=Math.random()*Math.PI*2, φ=(Math.random()-0.5)*Math.PI;
+  p[i*3]=Math.cos(θ)*Math.cos(φ)*r; p[i*3+1]=Math.sin(φ)*r*0.3; p[i*3+2]=Math.sin(θ)*Math.cos(φ)*r;
+  const t=Math.random();
+  cl[i*3]=0.83*t+0.4*(1-t); cl[i*3+1]=0.66*t+0.3*(1-t); cl[i*3+2]=0.33*t+0.1*(1-t);
+}
+g.setAttribute('position',new THREE.BufferAttribute(p,3));
+g.setAttribute('color',new THREE.BufferAttribute(cl,3));
+const stars=new THREE.Points(g,new THREE.PointsMaterial({size:0.018,vertexColors:true,transparent:true,opacity:0.6}));
+bgS.add(stars);
+
+// floating geometric shapes
+const shapeData=[
+  {geo:new THREE.OctahedronGeometry(1.2,0),x:8,y:2,c:0xd4a853},
+  {geo:new THREE.IcosahedronGeometry(0.9,0),x:-8,y:-2,c:0xf0c674},
+  {geo:new THREE.TetrahedronGeometry(1,0),x:0,y:5,c:0xd4a853},
+];
+const floaters=shapeData.map(({geo,x,y,c})=>{
+  const m=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:c,wireframe:true,transparent:true,opacity:0.06}));
+  m.position.set(x,y,-5); bgS.add(m); return m;
+});
+bgS.add(new THREE.AmbientLight(0xffffff,0.3));
+const pl=new THREE.PointLight(0xd4a853,1.5,30); pl.position.set(5,5,5); bgS.add(pl);
+
+let mx=0,my=0;
+window.addEventListener('mousemove',e=>{mx=(e.clientX/innerWidth-0.5)*2;my=-(e.clientY/innerHeight-0.5)*2;});
+window.addEventListener('resize',()=>{bgC.aspect=innerWidth/innerHeight;bgC.updateProjectionMatrix();bgR.setSize(innerWidth,innerHeight);});
+
+// ─── ABOUT 3D ───────────────────────────────────────────────
+const ac=document.getElementById('c-about');
+if(ac){
+  const aR=new THREE.WebGLRenderer({canvas:ac,antialias:true,alpha:true});
+  aR.setPixelRatio(Math.min(devicePixelRatio,2));
+  const wrap=ac.parentElement;
+  aR.setSize(wrap.offsetWidth||500,wrap.offsetHeight||500);
+  const aS=new THREE.Scene(),aC=new THREE.PerspectiveCamera(60,(wrap.offsetWidth||500)/(wrap.offsetHeight||500),0.1,100);
+  aC.position.z=4;
+  // network nodes
+  const nodeCount=80;
+  const nGeo=new THREE.BufferGeometry(), nPos=new Float32Array(nodeCount*3);
+  const nodes=[];
+  for(let i=0;i<nodeCount;i++){
+    nPos[i*3]=(Math.random()-0.5)*6; nPos[i*3+1]=(Math.random()-0.5)*6; nPos[i*3+2]=(Math.random()-0.5)*2;
+    nodes.push([nPos[i*3],nPos[i*3+1],nPos[i*3+2]]);
+  }
+  nGeo.setAttribute('position',new THREE.BufferAttribute(nPos,3));
+  aS.add(new THREE.Points(nGeo,new THREE.PointsMaterial({size:0.06,color:0xd4a853,transparent:true,opacity:0.9})));
+  // edges
+  const ePositions=[];
+  for(let i=0;i<nodeCount;i++){
+    for(let j=i+1;j<nodeCount;j++){
+      const dx=nodes[i][0]-nodes[j][0], dy=nodes[i][1]-nodes[j][1];
+      if(Math.sqrt(dx*dx+dy*dy)<1.8){
+        ePositions.push(...nodes[i],...nodes[j]);
+      }
+    }
+  }
+  const eGeo=new THREE.BufferGeometry();
+  eGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array(ePositions),3));
+  aS.add(new THREE.LineSegments(eGeo,new THREE.LineBasicMaterial({color:0xd4a853,transparent:true,opacity:0.08})));
+  aS.add(new THREE.AmbientLight(0xffffff,0.5));
+  const apl=new THREE.PointLight(0xd4a853,2,20); apl.position.set(2,2,3); aS.add(apl);
+
+  window._aboutScene={r:aR,s:aS,c:aC,pts:null,t:0};
+}
+
+// ─── COUNTER ────────────────────────────────────────────────
+const counters=document.querySelectorAll('[data-count]');
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const el=e.target, target=+el.dataset.count;
+      let v=0; const dur=1800, step=16, inc=target/(dur/step);
+      const t=setInterval(()=>{v=Math.min(v+inc,target);el.textContent=Math.round(v);if(v>=target)clearInterval(t);},step);
+      obs.unobserve(el);
+    }
+  });
+},{threshold:0.5});
+counters.forEach(c=>obs.observe(c));
+
+// ─── LOOP ────────────────────────────────────────────────────
+let t=0;
+(function loop(){
+  requestAnimationFrame(loop); t+=0.004;
+  stars.rotation.y=t*0.02; stars.rotation.x=Math.sin(t*0.3)*0.02;
+  floaters.forEach((f,i)=>{f.rotation.x=t*(0.3+i*0.1);f.rotation.y=t*(0.2+i*0.08);f.position.y+=Math.sin(t+i)*0.002;});
+  bgC.position.x+=(mx*0.4-bgC.position.x)*0.03;
+  bgC.position.y+=(my*0.3-bgC.position.y)*0.03;
+  bgC.lookAt(bgS.position);
+  bgR.render(bgS,bgC);
+  if(window._aboutScene){
+    const a=window._aboutScene;
+    a.t+=0.005; a.c.position.x=Math.sin(a.t)*0.3; a.c.position.y=Math.cos(a.t*0.7)*0.2;
+    a.c.lookAt(a.s.position); a.r.render(a.s,a.c);
+  }
+})();
+</script>
+</body>
+</html>
